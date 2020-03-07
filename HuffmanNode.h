@@ -25,10 +25,10 @@ public:
     void setLeftChild(HuffmanNode left);   //setter for left child node
     void setRightChild(HuffmanNode right); //setter for right child node
 
-    char getCharacter(void);                      //getter for character
-    int getFrequency(void);                       //getter for frequency
-    std::shared_ptr<HuffmanNode> getLeftChild();  //getter for left child node
-    std::shared_ptr<HuffmanNode> getRightChild(); //getter for right child node
+    char getCharacter(void);      //getter for character
+    int getFrequency(void);       //getter for frequency
+    HuffmanNode *getLeftChild();  //getter for left child node
+    HuffmanNode *getRightChild(); //getter for right child node
 };
 
 } // namespace CHNJAR003
