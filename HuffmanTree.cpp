@@ -41,9 +41,53 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
 
     for (std::pair<char, int> element : frequencyTable)
     {
-        char key = element.first;
-        int value = element.second;
+        char keyChar = element.first;
+        int valueFreq = element.second;
 
-        PRINT("key=" + std::string(1, key) + " value=" + std::to_string(value) + "\n");
+        //PRINT("key=" + std::string(1, keyChar) + " value=" + std::to_string(valueFreq) + "\n");
+
+        //HuffmanNode *temp = new HuffmanNode();
+        HuffmanNode tempNode;
+        std::shared_ptr<HuffmanNode> tempPtr = std::make_shared<HuffmanNode>(tempNode);
+        tempPtr->setCharacter(keyChar);
+        tempPtr->setFrequency(valueFreq);
+
+        nodeQueue.push(*tempPtr);
+
+        PRINT("tempNode char=" + std::string(1, tempPtr->getCharacter()) + "\n");
     }
+
+    // PRINT("\n\n");
+
+    while (nodeQueue.size() > 1)
+    {
+
+        //HuffmanNode temp = nodeQueue.top();
+        //nodeQueue.pop();
+        //PRINT("character=" + std::string(1, temp.getCharacter()) + " frequency=" + std::to_string(temp.getFrequency()) + "\n")
+
+        //HuffmanNode *newTemp = new HuffmanNode();
+        HuffmanNode newTempNode;
+        std::shared_ptr<HuffmanNode> newTempPtr = std::make_shared<HuffmanNode>(newTempNode);
+
+        int sumFrequency = 0;
+
+        HuffmanNode temp = nodeQueue.top(); //temporarily store the top element
+        sumFrequency += temp.getFrequency();
+        newTempPtr->setLeftChild(temp);
+        nodeQueue.pop();
+
+        temp = nodeQueue.top(); //temporarily store the top element
+        sumFrequency += temp.getFrequency();
+        newTempPtr->setRightChild(temp);
+        nodeQueue.pop();
+
+        newTempPtr->setFrequency(sumFrequency);
+
+        nodeQueue.push(*newTempPtr);
+        PRINT("newTempNode frequency=" + std::to_string(newTempPtr->getFrequency()) + "\n");
+    }
+
+    root = std::make_shared<HuffmanNode>(nodeQueue.top());
+    nodeQueue.pop();
 }
