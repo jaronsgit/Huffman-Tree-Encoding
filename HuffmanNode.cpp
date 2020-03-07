@@ -16,3 +16,82 @@ HuffmanNode::~HuffmanNode()
     leftChild = nullptr;
     rightChild = nullptr;
 }
+
+HuffmanNode::HuffmanNode(const HuffmanNode &rhs) : frequency(rhs.frequency),
+                                                   character(rhs.character), rightChild(rhs.rightChild), leftChild(rhs.leftChild)
+{
+}
+
+HuffmanNode::HuffmanNode(HuffmanNode &&rhs) : frequency(rhs.frequency), character(rhs.character), rightChild(rhs.rightChild), leftChild(rhs.leftChild)
+{
+    rhs.rightChild = nullptr;
+    rhs.leftChild = nullptr;
+    rhs.frequency = -1;
+}
+
+HuffmanNode &HuffmanNode::operator=(const HuffmanNode &rhs)
+{
+    if (this != &rhs)
+    {
+        frequency = rhs.frequency;
+        character = rhs.character;
+        rightChild = rhs.rightChild;
+        leftChild = rhs.leftChild;
+    }
+    return *this; //return a reference to the current object
+}
+
+HuffmanNode &HuffmanNode::operator=(HuffmanNode &&rhs)
+{
+    if (this != &rhs)
+    {
+        character = std::move(rhs.character);
+        frequency = rhs.frequency;
+        rhs.frequency = -1;
+        leftChild = rhs.leftChild;
+        rightChild = rhs.rightChild;
+
+        rhs.leftChild = nullptr;
+        rhs.rightChild = nullptr;
+    }
+
+    return *this; //return a reference to the current object
+}
+
+void HuffmanNode::setCharacter(char c)
+{
+    character = c;
+}
+
+void HuffmanNode::setFrequency(int f)
+{
+    frequency = f;
+}
+
+void HuffmanNode::setLeftChild(HuffmanNode left)
+{
+    leftChild = std::shared_ptr<HuffmanNode>(new HuffmanNode(left));
+}
+void HuffmanNode::setRightChild(HuffmanNode right)
+{
+    rightChild = std::shared_ptr<HuffmanNode>(new HuffmanNode(right));
+}
+
+char HuffmanNode::getCharacter(void)
+{
+    return character;
+}
+
+int HuffmanNode::getFrequency(void)
+{
+    return frequency;
+}
+HuffmanNode *HuffmanNode::getLeftChild()
+{
+    return leftChild.get();
+}
+
+HuffmanNode *HuffmanNode::getRightChild()
+{
+    return rightChild.get();
+}
