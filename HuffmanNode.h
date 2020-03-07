@@ -25,11 +25,13 @@ public:
     void setLeftChild(HuffmanNode left);   //setter for left child node
     void setRightChild(HuffmanNode right); //setter for right child node
 
-    char getCharacter(void);      //getter for character
-    int getFrequency(void);       //getter for frequency
-    HuffmanNode *getLeftChild();  //getter for left child node
-    HuffmanNode *getRightChild(); //getter for right child node
+    char getCharacter(void) const;      //getter for character
+    int getFrequency(void) const;       //getter for frequency
+    HuffmanNode *getLeftChild() const;  //getter for left child node
+    HuffmanNode *getRightChild() const; //getter for right child node
 };
+
+bool operator<(const HuffmanNode &a, const HuffmanNode &b);
 
 } // namespace CHNJAR003
 
