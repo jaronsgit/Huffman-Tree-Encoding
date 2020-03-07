@@ -1,6 +1,7 @@
 #include "HuffmanNode.h"
 
-using namespace CHNJAR003;
+namespace CHNJAR003
+{
 
 HuffmanNode::HuffmanNode()
 {
@@ -77,21 +78,29 @@ void HuffmanNode::setRightChild(HuffmanNode right)
     rightChild = std::shared_ptr<HuffmanNode>(new HuffmanNode(right));
 }
 
-char HuffmanNode::getCharacter(void)
+char HuffmanNode::getCharacter(void) const
 {
     return character;
 }
 
-int HuffmanNode::getFrequency(void)
+int HuffmanNode::getFrequency(void) const
 {
     return frequency;
 }
-HuffmanNode *HuffmanNode::getLeftChild()
+HuffmanNode *HuffmanNode::getLeftChild() const
 {
     return leftChild.get();
 }
 
-HuffmanNode *HuffmanNode::getRightChild()
+HuffmanNode *HuffmanNode::getRightChild() const
 {
     return rightChild.get();
 }
+
+bool operator<(const HuffmanNode &a, const HuffmanNode &b)
+{
+
+    return a.getFrequency() < b.getFrequency();
+}
+
+} // namespace CHNJAR003
