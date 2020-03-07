@@ -13,8 +13,8 @@ class HuffmanTree
 private:
     std::shared_ptr<HuffmanNode> root;
     std::priority_queue<HuffmanNode> nodeQueue;
-    std::unordered_map<char, int> frequencyTable; //Map of the characters and their associated frequencies
-
+    std::unordered_map<char, int> frequencyTable;    //Map of the characters and their associated frequencies
+    std::unordered_map<char, std::string> codeTable; //Map of the characters and their associated binary codes
     void buildFrequencyTable(std::string inputFileName);
 
 public:

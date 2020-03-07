@@ -100,7 +100,7 @@ HuffmanNode *HuffmanNode::getRightChild() const
 bool operator<(const HuffmanNode &a, const HuffmanNode &b)
 {
 
-    return a.getFrequency() < b.getFrequency();
+    return a.getFrequency() > b.getFrequency();
 }
 
 } // namespace CHNJAR003
