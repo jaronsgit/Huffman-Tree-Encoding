@@ -21,7 +21,8 @@ public:
     HuffmanTree();
     ~HuffmanTree();
 
-    void buildHuffmanTree(std::unordered_map<char, int> ft); //Build the HuffmanTree representation from map of frequencies
+    void buildHuffmanTree(std::unordered_map<char, int> ft);        //Build the HuffmanTree representation from map of frequencies
+    void buildCodeTable(HuffmanNode *node, std::string binaryCode); //Recurse down tree and build table of characters and their binary codes
     void compressData(std::string inputFileName, std::string outputFileName);
 };
 
