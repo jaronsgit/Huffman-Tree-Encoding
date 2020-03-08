@@ -35,10 +35,8 @@ void HuffmanTree::buildFrequencyTable(std::string inputFileName)
     }
 }
 
-void HuffmanTree::compressData(std::string inputFileName, std::string outputFileName)
+void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
 {
-    buildFrequencyTable(inputFileName); //build the frequency table (map) of all the characters in the text file
-
     for (std::pair<char, int> element : frequencyTable)
     {
         char keyChar = element.first;
@@ -90,4 +88,34 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
 
     root = std::make_shared<HuffmanNode>(nodeQueue.top());
     nodeQueue.pop();
+
+    PRINT("root frequency=" + std::to_string(root->getFrequency()) + "\n");
+
+    buildCodeTable(root.get(), ""); //Build the code table from the tree
+}
+
+void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
+{
+
+    if (node->getLeftChild())
+    { //has left child
+        buildCodeTable(node->getLeftChild(), binaryCode += "0");
+    }
+
+    if (node->getRightChild())
+    { //has right child
+        buildCodeTable(node->getRightChild(), binaryCode += "1");
+    }
+
+    if (!node->getLeftChild() && !node->getRightChild())
+    { //if it is a leaf node
+        codeTable[node->getCharacter()] = binaryCode;
+        PRINT("code for " + std::string(1, node->getCharacter()) + "=" + binaryCode + "\n");
+    }
+}
+
+void HuffmanTree::compressData(std::string inputFileName, std::string outputFileName)
+{
+    buildFrequencyTable(inputFileName); //build the frequency table (map) of all the characters in the text file
+    buildHuffmanTree(frequencyTable);
 }
