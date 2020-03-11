@@ -27,7 +27,7 @@ public:
     std::unordered_map<char, int> getFrequencyTable() const;
     std::unordered_map<char, std::string> getCodeTable() const;
     std::priority_queue<HuffmanNode> getNodeQueue() const;
-    HuffmanNode getRootNode() const;
+    HuffmanNode *getRootNode() const;
 };
 
 } // namespace CHNJAR003

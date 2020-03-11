@@ -88,8 +88,6 @@ void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
     nodeQueue.pop();
 
     PRINT("root frequency=" + std::to_string(root->getFrequency()) + "\n");
-
-    buildCodeTable(root.get(), ""); //Build the code table from the tree
 }
 
 void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
@@ -130,6 +128,7 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
 {
     buildFrequencyTable(inputFileName); //build the frequency table (map) of all the characters in the text file
     buildHuffmanTree(frequencyTable);
+    buildCodeTable(root.get(), ""); //Build the code table from the tree
 
     //Now compress the ASCII text file and write it out
 
@@ -195,7 +194,7 @@ std::priority_queue<HuffmanNode> HuffmanTree::getNodeQueue() const
     return nodeQueue;
 }
 
-HuffmanNode HuffmanTree::getRootNode() const
+HuffmanNode *HuffmanTree::getRootNode() const
 {
-    return *root;
+    return root.get();
 }
