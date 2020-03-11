@@ -95,7 +95,21 @@ void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
 void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
 {
 
-    if (node->getLeftChild())
+    if ((node->getLeftChild() == nullptr) && (node->getRightChild() == nullptr))
+    { //Is at a leaf node
+        codeTable[node->getCharacter()] = binaryCode;
+        PRINT("code for " + std::string(1, node->getCharacter()) + "=" + binaryCode + "\n");
+        return;
+    }
+    else
+    {
+        std::string leftCode = binaryCode + "0";
+        std::string rightCode = binaryCode + "1";
+        buildCodeTable(node->getLeftChild(), leftCode);
+        buildCodeTable(node->getRightChild(), rightCode);
+    }
+
+    /*if (node->getLeftChild())
     { //has left child
         buildCodeTable(node->getLeftChild(), binaryCode += "0");
     }
@@ -109,7 +123,7 @@ void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
     { //if it is a leaf node
         codeTable[node->getCharacter()] = binaryCode;
         PRINT("code for " + std::string(1, node->getCharacter()) + "=" + binaryCode + "\n");
-    }
+    }*/
 }
 
 void HuffmanTree::compressData(std::string inputFileName, std::string outputFileName)
