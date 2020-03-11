@@ -44,15 +44,6 @@ void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
 
         //PRINT("key=" + std::string(1, keyChar) + " value=" + std::to_string(valueFreq) + "\n");
 
-        /*
-        HuffmanNode tempNode;
-        std::shared_ptr<HuffmanNode> tempPtr = std::make_shared<HuffmanNode>(tempNode);
-        tempPtr->setCharacter(keyChar);
-        tempPtr->setFrequency(valueFreq);
-
-        nodeQueue.push(*tempPtr);
-        */
-
         HuffmanNode tempNode = HuffmanNode();
         tempNode.setCharacter(keyChar);
         tempNode.setFrequency(valueFreq);
@@ -73,26 +64,24 @@ void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
         //nodeQueue.pop();
         //PRINT("character=" + std::string(1, temp.getCharacter()) + " frequency=" + std::to_string(temp.getFrequency()) + "\n")
 
-        //HuffmanNode *newTemp = new HuffmanNode();
-        HuffmanNode newTempNode;
-        std::shared_ptr<HuffmanNode> newTempPtr = std::make_shared<HuffmanNode>(newTempNode);
+        HuffmanNode newTempNode = HuffmanNode();
 
         int sumFrequency = 0;
 
         HuffmanNode temp = nodeQueue.top(); //temporarily store the top element
         sumFrequency += temp.getFrequency();
-        newTempPtr->setLeftChild(temp);
+        newTempNode.setLeftChild(temp);
         nodeQueue.pop();
 
         temp = nodeQueue.top(); //temporarily store the top element
         sumFrequency += temp.getFrequency();
-        newTempPtr->setRightChild(temp);
+        newTempNode.setRightChild(temp);
         nodeQueue.pop();
 
-        newTempPtr->setFrequency(sumFrequency);
+        newTempNode.setFrequency(sumFrequency);
 
-        nodeQueue.push(*newTempPtr);
-        PRINT("newTempNode frequency=" + std::to_string(newTempPtr->getFrequency()) + "\n");
+        nodeQueue.push(newTempNode);
+        PRINT("newTempNode frequency=" + std::to_string(newTempNode.getFrequency()) + "\n");
     }
 
     root = std::make_shared<HuffmanNode>(nodeQueue.top());
@@ -190,4 +179,9 @@ std::unordered_map<char, std::string> HuffmanTree::getCodeTable() const
 std::priority_queue<HuffmanNode> HuffmanTree::getNodeQueue() const
 {
     return nodeQueue;
+}
+
+HuffmanNode HuffmanTree::getRootNode() const
+{
+    return *root;
 }
