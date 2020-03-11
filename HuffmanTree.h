@@ -19,12 +19,14 @@ public:
     HuffmanTree();
     ~HuffmanTree();
     void buildFrequencyTable(std::string inputFileName);
+    void fillPriorityQueue(std::unordered_map<char, int> ft);
     void buildHuffmanTree(std::unordered_map<char, int> ft);        //Build the HuffmanTree representation from map of frequencies
     void buildCodeTable(HuffmanNode *node, std::string binaryCode); //Recurse down tree and build table of characters and their binary codes
     void compressData(std::string inputFileName, std::string outputFileName);
 
     std::unordered_map<char, int> getFrequencyTable() const;
     std::unordered_map<char, std::string> getCodeTable() const;
+    std::priority_queue<HuffmanNode> getNodeQueue() const;
 };
 
 } // namespace CHNJAR003
