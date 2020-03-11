@@ -22,7 +22,9 @@ public:
     void fillPriorityQueue(std::unordered_map<char, int> ft);
     void buildHuffmanTree(std::unordered_map<char, int> ft);        //Build the HuffmanTree representation from map of frequencies
     void buildCodeTable(HuffmanNode *node, std::string binaryCode); //Recurse down tree and build table of characters and their binary codes
+    std::string encodeData(std::string inputFileName);
     void compressData(std::string inputFileName, std::string outputFileName);
+    void compressToBitStream(std::string inputFileName, std::string outputFileName);
 
     std::unordered_map<char, int> getFrequencyTable() const;
     std::unordered_map<char, std::string> getCodeTable() const;

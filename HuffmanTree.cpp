@@ -3,6 +3,9 @@
 #include <fstream>
 #include <memory>
 #include <queue>
+#include <bitset>
+#include <string>
+#include <cstring>
 #include <unordered_map>
 using namespace CHNJAR003;
 
@@ -37,6 +40,9 @@ void HuffmanTree::buildFrequencyTable(std::string inputFileName)
 
 void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
 {
+
+    std::priority_queue<HuffmanNode> testingQueue;
+
     for (std::pair<char, int> element : ft)
     {
         char keyChar = element.first;
@@ -48,9 +54,15 @@ void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
         tempNode.setCharacter(keyChar);
         tempNode.setFrequency(valueFreq);
         nodeQueue.push(tempNode);
-
+        testingQueue.push(tempNode);
         //PRINT("tempNode char=" + std::string(1, tempPtr->getCharacter()) + "\n");
     }
+
+    /*while (testingQueue.size() > 0)
+    {
+        PRINT(std::string(1, testingQueue.top().getCharacter()) + " : " + std::to_string(testingQueue.top().getFrequency()) + "\n");
+        testingQueue.pop();
+    }*/
 }
 
 void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
@@ -81,13 +93,13 @@ void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
         newTempNode.setFrequency(sumFrequency);
 
         nodeQueue.push(newTempNode);
-        PRINT("newTempNode frequency=" + std::to_string(newTempNode.getFrequency()) + "\n");
+        //PRINT("newTempNode frequency=" + std::to_string(newTempNode.getFrequency()) + "\n");
     }
 
     root = std::make_shared<HuffmanNode>(nodeQueue.top());
     nodeQueue.pop();
 
-    PRINT("root frequency=" + std::to_string(root->getFrequency()) + "\n");
+    //PRINT("root frequency=" + std::to_string(root->getFrequency()) + "\n");
 }
 
 void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
@@ -96,7 +108,7 @@ void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
     if ((node->getLeftChild() == nullptr) && (node->getRightChild() == nullptr))
     { //Is at a leaf node
         codeTable[node->getCharacter()] = binaryCode;
-        PRINT("code for " + std::string(1, node->getCharacter()) + "=" + binaryCode + "\n");
+        //PRINT("code for " + std::string(1, node->getCharacter()) + "=" + binaryCode + "\n");
         return;
     }
     else
@@ -132,6 +144,18 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
 
     //Now compress the ASCII text file and write it out
 
+    std::string encodedString = encodeData(inputFileName);
+
+    std::ofstream outputFile;
+    outputFile.open((outputFileName + ".txt").c_str());
+
+    if (outputFile.is_open())
+    {
+        outputFile << encodedString;
+        outputFile.close();
+    }
+
+    /*
     int numCharsInFile = 0;
     int numBitsInFile = 0;
 
@@ -156,7 +180,7 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
         inputFile.close();
         outputFile.close();
     }
-
+*/
     outputFile.open((outputFileName + ".hdr").c_str());
 
     if (outputFile.is_open())
@@ -172,8 +196,8 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
         }
 
         outputFile.close();
-        int actualFileSize = (numBitsInFile / 8) + (numBitsInFile % 8 ? 1 : 0);
-        PRINT("Actual file size supposed to be: " + std::to_string(actualFileSize) + " bytes\n");
+        //int actualFileSize = (numBitsInFile / 8) + (numBitsInFile % 8 ? 1 : 0);
+        //PRINT("Actual file size supposed to be: " + std::to_string(actualFileSize) + " bytes\n");
     }
     else
     {
@@ -197,4 +221,52 @@ std::priority_queue<HuffmanNode> HuffmanTree::getNodeQueue() const
 HuffmanNode *HuffmanTree::getRootNode() const
 {
     return root.get();
+}
+
+std::string HuffmanTree::encodeData(std::string inputFileName)
+{
+
+    int numCharsInFile = 0;
+    int numBitsInFile = 0;
+
+    std::string encodedString = "";
+
+    std::ifstream inputFile;
+    inputFile.open((inputFileName + ".txt").c_str());
+
+    if (inputFile.is_open())
+    {
+        char tempChar;
+        while (inputFile.get(tempChar))
+        {
+            numCharsInFile++;                            //increment the number of characters read from the file
+            std::string bitString = codeTable[tempChar]; //convert the character to its corresponding string binary code
+            numBitsInFile += bitString.length();         //record the number of individual "bits"
+            encodedString += bitString;                  //add the bitstring for the character to the full string
+            //PRINT(bitString + "\n");
+        }
+        inputFile.close();
+    }
+
+    int actualFileSize = (numBitsInFile / 8) + (numBitsInFile % 8 ? 1 : 0);
+    PRINT("Actual file size supposed to be: " + std::to_string(actualFileSize) + " bytes\n");
+
+    return encodedString;
+}
+
+void HuffmanTree::compressToBitStream(std::string inputFileName, std::string outputFileName)
+{
+
+    std::string encodedString = encodeData(inputFileName);
+
+    //char *encoded_cstr = new char[encodedString.length()];
+    //std::strcpy(encoded_cstr, encodedString.c_str());
+
+    for (int i = 0; i < encodedString.length(); i++)
+    {
+    }
+
+    std::bitset<8> tempBitset;
+
+    char test = std::stoi("101", nullptr, 2);
 }
