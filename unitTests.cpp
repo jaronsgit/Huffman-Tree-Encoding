@@ -12,7 +12,12 @@ using namespace CHNJAR003;
 //encoding
 //etc.
 //bit packing and unpacking test cases as well
+TEST_CASE("Testing")
+{
+    REQUIRE(1 == 2);
+}
 
+/*
 TEST_CASE("COMPRESSION ALGORITHM TESTING")
 {
     HuffmanTree hufftree = HuffmanTree();
@@ -63,7 +68,9 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
     {
         hufftree.buildHuffmanTree(tempFreqMap);
 
-        HuffmanNode rootTemp = hufftree.getRootNode();
+        std::shared_ptr<HuffmanNode> tempRootPtr(hufftree.getRootNode());
+
+        //HuffmanNode rootTemp = *hufftree.getRootNode();
 
         int totChars = 0;
 
@@ -72,10 +79,22 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
             totChars += element.second; //Accumulate total number of characters in the file
         }
 
-        REQUIRE((rootTemp.getFrequency() == totChars) && (rootTemp.getCharacter == 13));
+        REQUIRE(((tempRootPtr->getFrequency() == totChars) && (tempRootPtr->getCharacter() == 13)));
     }
 
     SECTION("buildCodeTable() Tests")
     {
+        hufftree.buildCodeTable(hufftree.getRootNode(), ""); //Build the code table from the tree
+
+        tempCodeMap = hufftree.getCodeTable();
+
+        REQUIRE(tempCodeMap['g'].length() == 2);
+        REQUIRE(tempCodeMap['o'].length() == 2);
+        REQUIRE(tempCodeMap['p'].length() == 4);
+        REQUIRE(tempCodeMap['h'].length() == 4);
+        REQUIRE(tempCodeMap['e'].length() == 3);
+        REQUIRE(tempCodeMap['r'].length() == 4);
+        REQUIRE(tempCodeMap['s'].length() == 4);
+        REQUIRE(tempCodeMap[' '].length() == 3);
     }
-}
+*/
