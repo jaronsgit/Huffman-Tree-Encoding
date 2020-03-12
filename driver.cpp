@@ -11,11 +11,20 @@ using namespace CHNJAR003;
 int main(int argc, char *argv[])
 {
 
-    if (argc == 2)
+    if (argc == 3)
     {
 
-        std::string inputFileName = argv[0];
-        std::string outputFileName = argv[1];
+        std::string inputFileName = argv[1];
+        std::string outputFileName = argv[2];
+
+        PRINT(inputFileName + "\n");
+        PRINT(outputFileName + "\n");
+
+        HuffmanTree hufftree = HuffmanTree();
+
+        hufftree.compressData(inputFileName, outputFileName);
+        hufftree.compressToBitStream(inputFileName, outputFileName);
+        hufftree.decompressFromBitStream(outputFileName, outputFileName);
     }
     else
     {
