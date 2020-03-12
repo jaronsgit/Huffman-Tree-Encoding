@@ -295,7 +295,7 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
             }
 
             char tempChar = tempBitset.to_ulong();
-
+            PRINT("writing to binary file: " + tempBitset.to_string() + "\n");
             binaryFile.write((char *)&tempChar, 1);
 
             //PRINT(tempBitset);
@@ -349,7 +349,6 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             PRINT(std::string(1, element.first) + ":" + element.second + "\n");
         }*/
 
-        
         inputCodeFile.close();
     }
     else
@@ -363,6 +362,30 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
 
     if (inputBinaryFile.is_open())
     {
+        int totNumBits;
+        char tempChar;
+        inputBinaryFile.read(reinterpret_cast<char *>(&totNumBits), sizeof(int)); // read in the total number of bits
+        inputBinaryFile.read(&tempChar, 1);
+
+        int totNumBytes = totNumBits / 8 + (totNumBits % 8 ? 1 : 0);
+        //std::bitset<8> *bitsetByteArray = new std::bitset<8>[totNumBytes];
+
+        std::string encodedString = "";
+        std::string tempBit = "";
+        std::bitset<8> tempBitsetByte;
+        for (int byteIndex = 0; byteIndex < totNumBytes; byteIndex++)
+        {
+            inputBinaryFile.read((char *)&tempBitsetByte, 1);
+            PRINT("reading from binary file: " + tempBitsetByte.to_string() + "\n");
+            /*for (int i = 7; i > -1; i--)
+            {
+                tempBit = (tempBitsetByte[i] == 1 ? '1' : '0');
+                encodedString += tempBit;
+            }*/
+        }
+
+        PRINT("Encoded string: " + encodedString + "\n");
+
         inputBinaryFile.close();
     }
     else
