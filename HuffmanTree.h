@@ -25,6 +25,7 @@ public:
     std::string encodeData(std::string inputFileName);
     void compressData(std::string inputFileName, std::string outputFileName);
     void compressToBitStream(std::string inputFileName, std::string outputFileName);
+    void decompressFromBitStream(std::string binFileName, std::string codeTableFile);
 
     std::unordered_map<char, int> getFrequencyTable() const;
     std::unordered_map<char, std::string> getCodeTable() const;
