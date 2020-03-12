@@ -6,6 +6,7 @@
 #include <bitset>
 #include <string>
 #include <cstring>
+#include <sstream>
 #include <unordered_map>
 using namespace CHNJAR003;
 
@@ -138,6 +139,7 @@ void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
 
 void HuffmanTree::compressData(std::string inputFileName, std::string outputFileName)
 {
+    PRINT("Running compressData()\n");
     buildFrequencyTable(inputFileName); //build the frequency table (map) of all the characters in the text file
     buildHuffmanTree(frequencyTable);
     buildCodeTable(root.get(), ""); //Build the code table from the tree
@@ -225,7 +227,7 @@ HuffmanNode *HuffmanTree::getRootNode() const
 
 std::string HuffmanTree::encodeData(std::string inputFileName)
 {
-
+    PRINT("Running encodeData()\n");
     int numCharsInFile = 0;
     int numBitsInFile = 0;
 
@@ -256,17 +258,115 @@ std::string HuffmanTree::encodeData(std::string inputFileName)
 
 void HuffmanTree::compressToBitStream(std::string inputFileName, std::string outputFileName)
 {
-
+    PRINT("Running compressToBitStream()\n");
+    buildFrequencyTable(inputFileName); //build the frequency table (map) of all the characters in the text file
+    buildHuffmanTree(frequencyTable);
+    buildCodeTable(root.get(), ""); //Build the code table from the tree
     std::string encodedString = encodeData(inputFileName);
 
     //char *encoded_cstr = new char[encodedString.length()];
     //std::strcpy(encoded_cstr, encodedString.c_str());
+    int processedBitsCount = 0;
 
-    for (int i = 0; i < encodedString.length(); i++)
+    std::ofstream binaryFile;
+    binaryFile.open((outputFileName + ".bin").c_str(), std::ios::binary | std::ios::out);
+
+    if (binaryFile.is_open())
     {
+
+        int numBits = encodedString.length();
+        char endlChar = '\n';
+        binaryFile.write(reinterpret_cast<const char *>(&numBits), sizeof(numBits));
+        binaryFile.write(&endlChar, 1);
+
+        while (processedBitsCount < encodedString.length())
+        {
+            std::string subBits = encodedString.substr(processedBitsCount, 8);
+            processedBitsCount += 8;
+            //std::bitset<8> tempBitset(subBits);
+            std::bitset<8> tempBitset;
+
+            for (int i = 0; i < subBits.length(); i++)
+            {
+                if (subBits[i] == '1')
+                {
+                    tempBitset[7 - i] = 1;
+                }
+            }
+
+            char tempChar = tempBitset.to_ulong();
+
+            binaryFile.write((char *)&tempChar, 1);
+
+            //PRINT(tempBitset);
+            //PRINT("\n");
+        }
+        binaryFile.close();
+    }
+    else
+    {
+        PRINT("Could not open the binary file to write compressed file.\n");
     }
 
-    std::bitset<8> tempBitset;
+    //char test = std::stoi("101", nullptr, 2);
+}
 
-    char test = std::stoi("101", nullptr, 2);
+void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string codeTableFile)
+{
+
+    std::ifstream inputCodeFile;
+    inputCodeFile.open((codeTableFile + ".hdr").c_str());
+
+    if (inputCodeFile.is_open())
+    {
+        std::string line;
+        std::string token;
+        std::vector<std::string> tokens;
+
+        getline(inputCodeFile, line);
+        while (!inputCodeFile.eof())
+        {
+            std::istringstream iss(line);
+            while (getline(iss, token, ':'))
+            {
+                tokens.push_back(token);
+            }
+            getline(inputCodeFile, line);
+        }
+
+        //insert the codes from the header file into the code table/map
+        for (int i = 0; i < tokens.size(); i += 2)
+        {
+            /*char cstr[tokens[i].size() + 1];
+            strcpy(cstr, tokens[i].c_str()); //copy it into char array as c_str() returns constant
+
+            PRINT(std::string(1, cstr[0]) + ":" + tokens[i + 1] + "\n");*/
+            codeTable[tokens[i].c_str()[0]] = tokens[i + 1];
+        }
+
+        /*for (const auto &element : codeTable)
+        {
+            PRINT(std::string(1, element.first) + ":" + element.second + "\n");
+        }*/
+
+        
+        inputCodeFile.close();
+    }
+    else
+    {
+        PRINT("Could not open the code table header file in order to read compressed file.\n");
+    }
+
+    std::ifstream inputBinaryFile;
+
+    inputBinaryFile.open((binFileName + ".bin").c_str(), std::ios::in | std::ios::binary);
+
+    if (inputBinaryFile.is_open())
+    {
+        inputBinaryFile.close();
+    }
+    else
+    {
+        PRINT("Could not open the binary file to read compressed file.\n");
+    }
 }
