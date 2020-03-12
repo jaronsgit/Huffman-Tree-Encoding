@@ -313,12 +313,13 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
 
 void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string codeTableFile)
 {
-
+    std::unordered_map<std::string, char> decode_code_table;
     std::ifstream inputCodeFile;
     inputCodeFile.open((codeTableFile + ".hdr").c_str());
 
     if (inputCodeFile.is_open())
     {
+
         std::string line;
         std::string token;
         std::vector<std::string> tokens;
@@ -341,12 +342,13 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             strcpy(cstr, tokens[i].c_str()); //copy it into char array as c_str() returns constant
 
             PRINT(std::string(1, cstr[0]) + ":" + tokens[i + 1] + "\n");*/
-            codeTable[tokens[i].c_str()[0]] = tokens[i + 1];
+            //codeTable[tokens[i].c_str()[0]] = tokens[i + 1];
+            decode_code_table[tokens[i + 1]] = tokens[i].c_str()[0];
         }
 
-        /*for (const auto &element : codeTable)
+        /*for (const auto &element : decode_code_table)
         {
-            PRINT(std::string(1, element.first) + ":" + element.second + "\n");
+            PRINT(element.first + ":" + std::string(1, element.second) + "\n");
         }*/
 
         inputCodeFile.close();
@@ -362,6 +364,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
 
     if (inputBinaryFile.is_open())
     {
+
         int totNumBits;
         char tempChar;
         inputBinaryFile.read(reinterpret_cast<char *>(&totNumBits), sizeof(int)); // read in the total number of bits
@@ -373,23 +376,59 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
         std::string encodedString = "";
         std::string tempBit = "";
         std::bitset<8> tempBitsetByte;
+
+        int bitcount = 0;
         for (int byteIndex = 0; byteIndex < totNumBytes; byteIndex++)
         {
             inputBinaryFile.read((char *)&tempBitsetByte, 1);
             PRINT("reading from binary file: " + tempBitsetByte.to_string() + "\n");
-            /*for (int i = 7; i > -1; i--)
+            for (int i = 7; i > -1; i--)
             {
                 tempBit = (tempBitsetByte[i] == 1 ? '1' : '0');
-                encodedString += tempBit;
-            }*/
+                if (bitcount < totNumBits)
+                {
+                    encodedString += tempBit;
+                    bitcount++;
+                }
+            }
         }
 
         PRINT("Encoded string: " + encodedString + "\n");
 
+        std::string decodedString = decodeData(decode_code_table, encodedString);
+        PRINT("Decoded string: " + decodedString + "\n");
         inputBinaryFile.close();
+
+        std::ofstream decompressedFile;
+        decompressedFile.open((binFileName + "_decompressed.txt").c_str());
+
+        //write it out to file
+        if (decompressedFile.is_open())
+        {
+            decompressedFile << decodedString;
+            decompressedFile.close();
+        }
     }
     else
     {
         PRINT("Could not open the binary file to read compressed file.\n");
     }
+}
+
+std::string HuffmanTree::decodeData(std::unordered_map<std::string, char> decode_code_table, std::string encodedString)
+{
+    std::string tempCode = "";
+    std::string decodedString = "";
+
+    for (int i = 0; i < encodedString.length(); i++)
+    {
+        tempCode += encodedString[i];
+
+        if (decode_code_table.count(tempCode) > 0)
+        {
+            decodedString += decode_code_table[tempCode];
+            tempCode = "";
+        }
+    }
+    return decodedString;
 }
