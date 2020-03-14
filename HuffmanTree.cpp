@@ -334,7 +334,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             }
             getline(inputCodeFile, line);
         }
-
+        PRINT("About to print decompress map:\n")
         //insert the codes from the header file into the code table/map
         for (int i = 0; i < tokens.size(); i += 2)
         {
@@ -343,7 +343,17 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
 
             PRINT(std::string(1, cstr[0]) + ":" + tokens[i + 1] + "\n");*/
             //codeTable[tokens[i].c_str()[0]] = tokens[i + 1];
-            decode_code_table[tokens[i + 1]] = tokens[i].c_str()[0];
+
+            PRINT(tokens[i + 1] + ":" + tokens[i] + "\n");
+            if (tokens[i] == "")
+            {
+                decode_code_table[tokens[i + 1]] = '\n';
+            }
+            else
+            {
+
+                decode_code_table[tokens[i + 1]] = tokens[i].c_str()[0];
+            }
         }
 
         /*for (const auto &element : decode_code_table)
