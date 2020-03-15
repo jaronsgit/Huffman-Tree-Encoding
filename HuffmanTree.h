@@ -16,12 +16,12 @@ private:
     std::unordered_map<char, int> frequencyTable;    //Map of the characters and their associated frequencies
     std::unordered_map<char, std::string> codeTable; //Map of the characters and their associated binary codes
 public:
-    HuffmanTree();  //default constructor
-    ~HuffmanTree(); //destructor
-    HuffmanTree(const HuffmanTree &rhs);
-    HuffmanTree(HuffmanTree &&rhs);
-    HuffmanTree &operator=(const HuffmanTree &rhs);
-    HuffmanTree &operator=(HuffmanTree &&rhs);
+    HuffmanTree();                                  //default constructor
+    ~HuffmanTree();                                 //destructor
+    HuffmanTree(const HuffmanTree &rhs);            //copy constructor
+    HuffmanTree(HuffmanTree &&rhs);                 //move constructor
+    HuffmanTree &operator=(const HuffmanTree &rhs); //copy assignment operator
+    HuffmanTree &operator=(HuffmanTree &&rhs);      //move assignment operator
     void buildFrequencyTable(std::string inputFileName);
     void fillPriorityQueue(std::unordered_map<char, int> ft);
     void buildHuffmanTree(std::unordered_map<char, int> ft);        //Build the HuffmanTree representation from map of frequencies
@@ -35,6 +35,7 @@ public:
     std::unordered_map<char, int> getFrequencyTable() const;
     std::unordered_map<char, std::string> getCodeTable() const;
     std::priority_queue<HuffmanNode> getNodeQueue() const;
+
     HuffmanNode *getRootNode() const;
 };
 

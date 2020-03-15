@@ -155,7 +155,7 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
     std::string encodedString = encodeData(inputFileName);
 
     std::ofstream outputFile;
-    outputFile.open((outputFileName + ".txt").c_str());
+    outputFile.open(("outputFiles/" + outputFileName + ".txt").c_str());
 
     if (outputFile.is_open())
     {
@@ -163,7 +163,7 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
         outputFile.close();
     }
 
-    outputFile.open((outputFileName + ".hdr").c_str());
+    outputFile.open(("outputFiles/" + outputFileName + ".hdr").c_str());
 
     if (outputFile.is_open())
     {
@@ -247,7 +247,7 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
     int processedBitsCount = 0;
 
     std::ofstream binaryFile;
-    binaryFile.open((outputFileName + ".bin").c_str(), std::ios::binary | std::ios::out);
+    binaryFile.open(("outputFiles/" + outputFileName + ".bin").c_str(), std::ios::binary | std::ios::out);
 
     if (binaryFile.is_open())
     {
@@ -284,7 +284,7 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
     }
 
     std::ofstream outputFile;
-    outputFile.open((outputFileName + ".hdr").c_str());
+    outputFile.open(("outputFiles/" + outputFileName + ".hdr").c_str());
 
     if (outputFile.is_open())
     {
@@ -314,7 +314,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
 {
     std::unordered_map<std::string, char> decode_code_table;
     std::ifstream inputCodeFile;
-    inputCodeFile.open((codeTableFile + ".hdr").c_str());
+    inputCodeFile.open(("outputFiles/" + codeTableFile + ".hdr").c_str());
 
     if (inputCodeFile.is_open())
     {
@@ -355,7 +355,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
 
     std::ifstream inputBinaryFile;
 
-    inputBinaryFile.open((binFileName + ".bin").c_str(), std::ios::in | std::ios::binary);
+    inputBinaryFile.open(("outputFiles/" + binFileName + ".bin").c_str(), std::ios::in | std::ios::binary);
 
     if (inputBinaryFile.is_open())
     {
@@ -395,7 +395,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
         inputBinaryFile.close();
 
         std::ofstream decompressedFile;
-        decompressedFile.open((binFileName + "_decompressed.txt").c_str());
+        decompressedFile.open(("outputFiles/" + binFileName + "_decompressed.txt").c_str());
 
         //write it out to file
         if (decompressedFile.is_open())

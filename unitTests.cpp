@@ -176,7 +176,7 @@ TEST_CASE("HuffmanNode Testing")
     }
 }
 
-TEST_CASE("COMPRESSION ALGORITHM TESTING")
+TEST_CASE("HuffmanTree Testing")
 {
     HuffmanTree hufftree = HuffmanTree();
 
@@ -198,6 +198,45 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
             //std::cout << "Default Constructor Tests:\n";
             HuffmanTree tree;
             REQUIRE(tree.getRootNode() == nullptr);
+        }
+        SECTION("Copy Constructor")
+        {
+
+            hufftree.buildFrequencyTable("testingFiles/testinput");
+            tempFreqMap = hufftree.getFrequencyTable();
+            hufftree.buildHuffmanTree(tempFreqMap);
+            HuffmanTree treeCopy = hufftree;
+            REQUIRE(hufftree.getRootNode()->getFrequency() == treeCopy.getRootNode()->getFrequency());
+        }
+        SECTION("Move Constructor")
+        {
+            hufftree.buildFrequencyTable("testingFiles/testinput");
+            tempFreqMap = hufftree.getFrequencyTable();
+            hufftree.buildHuffmanTree(tempFreqMap);
+            HuffmanTree treeCopy = std::move(hufftree);
+            REQUIRE(((treeCopy.getRootNode() != nullptr) && (hufftree.getRootNode() == nullptr)));
+        }
+        SECTION("Copy Assignment Operator")
+        {
+
+            HuffmanTree tree;
+
+            hufftree.buildFrequencyTable("testingFiles/testinput");
+            tempFreqMap = hufftree.getFrequencyTable();
+            hufftree.buildHuffmanTree(tempFreqMap);
+            HuffmanTree treeCopy;
+            treeCopy = hufftree;
+            REQUIRE(hufftree.getRootNode()->getFrequency() == treeCopy.getRootNode()->getFrequency());
+        }
+        SECTION("Move Assignment Operator")
+        {
+
+            hufftree.buildFrequencyTable("testingFiles/testinput");
+            tempFreqMap = hufftree.getFrequencyTable();
+            hufftree.buildHuffmanTree(tempFreqMap);
+            HuffmanTree treeCopy;
+            treeCopy = std::move(hufftree);
+            REQUIRE(((treeCopy.getRootNode() != nullptr) && (hufftree.getRootNode() == nullptr)));
         }
     }
 
@@ -294,7 +333,7 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
 
     SECTION("compressData() Tests")
     {
-        hufftree.compressData("testingFiles/lorem_ipsum", "testingFiles/lorem_output");
+        hufftree.compressData("testingFiles/lorem_ipsum", "lorem_output");
         std::string encodedString = hufftree.encodeData("testingFiles/lorem_ipsum");
         std::ifstream ifs("testingFiles/lorem_output.txt");
         std::string readFromFileLine = "";
@@ -308,7 +347,7 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
             std::cout << "Unable to open testing output text file." << std::endl;
         }
         ifs.close();
-        ifs.open("testingFiles/lorem_output.hdr");
+        ifs.open("outputFiles/lorem_output.hdr");
         int numPairs = 0;
         if (ifs.is_open())
         {
@@ -336,11 +375,11 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
     }
     SECTION("compressToBitStream() and decompressFromBitStream() Tests")
     {
-        hufftree.compressToBitStream("testingFiles/lorem_ipsum", "testingFiles/lorem_output_bitstream");
-        hufftree.decompressFromBitStream("testingFiles/lorem_output_bitstream", "testingFiles/lorem_output_bitstream");
+        hufftree.compressToBitStream("testingFiles/lorem_ipsum", "lorem_output_bitstream");
+        hufftree.decompressFromBitStream("outputFiles/lorem_output_bitstream", "outputFiles/lorem_output_bitstream");
 
         std::ifstream ifs1("testingFiles/lorem_ipsum.txt");
-        std::ifstream ifs2("testingFiles/lorem_output_bitstream_decompressed.txt");
+        std::ifstream ifs2("outputFiles/lorem_output_bitstream_decompressed.txt");
         std::string line1 = "";
         std::string line2 = "";
         if (ifs1.is_open() && ifs2.is_open())
