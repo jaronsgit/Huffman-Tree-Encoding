@@ -7,13 +7,6 @@
 
 using namespace CHNJAR003;
 
-//frequency counting
-//tree construction
-//code table construction (tree traversal)
-//encoding
-//etc.
-//bit packing and unpacking test cases as well
-
 TEST_CASE("HuffmanNode Testing")
 {
     std::cout << "HuffmanNode Tests" << std::endl;
@@ -298,9 +291,7 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
         //std::cout << encodedString << std::endl;
         REQUIRE(encodedString.length() == totBits); //Ensure that the expected number of bits is present in the encoded string
     }
-    SECTION("decodeData() Tests")
-    {
-    }
+
     SECTION("compressData() Tests")
     {
         hufftree.compressData("testingFiles/lorem_ipsum", "testingFiles/lorem_output");
@@ -316,16 +307,53 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
         {
             std::cout << "Unable to open testing output text file." << std::endl;
         }
-        REQUIRE(readFromFileLine.length() == encodedString.length());
+        ifs.close();
+        ifs.open("testingFiles/lorem_output.hdr");
+        int numPairs = 0;
+        if (ifs.is_open())
+        {
+            std::string tempLine;
+            while (!ifs.eof())
+            {
+                numPairs++;
+                getline(ifs, tempLine);
+                //std::cout << tempLine << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << "Unable to open testing output text file." << std::endl;
+        }
+        tempCodeMap = hufftree.getCodeTable();
+        /*std::cout << "About to print out code table:" << std::endl;
+        for (auto const &element : tempCodeMap)
+        {
+            std::cout << (int)element.first << ":" << element.second << std::endl;
+        }*/
+
+        REQUIRE(readFromFileLine.length() == encodedString.length()); //Ensure encoded string is written to file correctly
+        REQUIRE((numPairs - 1) == tempCodeMap.size());                //Ensure code table is written to header file correctly - accounts for last endl character
     }
-    SECTION("compressToBitStream() Tests")
+    SECTION("compressToBitStream() and decompressFromBitStream() Tests")
     {
         hufftree.compressToBitStream("testingFiles/lorem_ipsum", "testingFiles/lorem_output_bitstream");
-    }
-    SECTION("decompressFromBitStream() Tests")
-    {
-    }
-    SECTION("")
-    {
+        hufftree.decompressFromBitStream("testingFiles/lorem_output_bitstream", "testingFiles/lorem_output_bitstream");
+
+        std::ifstream ifs1("testingFiles/lorem_ipsum.txt");
+        std::ifstream ifs2("testingFiles/lorem_output_bitstream_decompressed.txt");
+        std::string line1 = "";
+        std::string line2 = "";
+        if (ifs1.is_open() && ifs2.is_open())
+        {
+            getline(ifs1, line1);
+            getline(ifs2, line2);
+            REQUIRE(line1.compare(line2) == 0); //The original file must match the decompressed file
+        }
+        else
+        {
+            std::cout << "Unable to open input text file or decompressed text file." << std::endl;
+        }
+        ifs1.close();
+        ifs2.close();
     }
 }
