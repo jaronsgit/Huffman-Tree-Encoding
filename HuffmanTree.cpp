@@ -42,7 +42,7 @@ void HuffmanTree::buildFrequencyTable(std::string inputFileName)
 void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
 {
 
-    std::priority_queue<HuffmanNode> testingQueue;
+    //std::priority_queue<HuffmanNode> testingQueue;
 
     for (std::pair<char, int> element : ft)
     {
@@ -55,7 +55,7 @@ void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
         tempNode.setCharacter(keyChar);
         tempNode.setFrequency(valueFreq);
         nodeQueue.push(tempNode);
-        testingQueue.push(tempNode);
+        //testingQueue.push(tempNode);
         //PRINT("tempNode char=" + std::string(1, tempPtr->getCharacter()) + "\n");
     }
 
@@ -193,7 +193,7 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
         {
             char keyChar = element.first;
             std::string valueBitString = element.second;
-            //PRINT(std::string(1, keyChar) + ":" + valueBitString + "\n");
+            PRINT(std::string(1, keyChar) + ":" + valueBitString + "\n");
             outputFile << keyChar << ":" << valueBitString << std::endl;
         }
 
@@ -334,7 +334,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             }
             getline(inputCodeFile, line);
         }
-        PRINT("About to print decompress map:\n")
+        //PRINT("About to print decompress map:\n")
         //insert the codes from the header file into the code table/map
         for (int i = 0; i < tokens.size(); i += 2)
         {
@@ -344,7 +344,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             PRINT(std::string(1, cstr[0]) + ":" + tokens[i + 1] + "\n");*/
             //codeTable[tokens[i].c_str()[0]] = tokens[i + 1];
 
-            PRINT(tokens[i + 1] + ":" + tokens[i] + "\n");
+            //PRINT(tokens[i + 1] + ":" + tokens[i] + "\n");
             if (tokens[i] == "")
             {
                 decode_code_table[tokens[i + 1]] = '\n';

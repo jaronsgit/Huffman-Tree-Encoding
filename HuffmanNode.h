@@ -20,10 +20,10 @@ public:
     HuffmanNode &operator=(const HuffmanNode &rhs); //assignent operator
     HuffmanNode &operator=(HuffmanNode &&rhs);      //move assignment operator
 
-    void setCharacter(char c);             //setter for character
-    void setFrequency(int f);              //setter for frequency
-    void setLeftChild(HuffmanNode left);   //setter for left child node
-    void setRightChild(HuffmanNode right); //setter for right child node
+    void setCharacter(char c);                    //setter for character
+    void setFrequency(int f);                     //setter for frequency
+    void setLeftChild(const HuffmanNode &left);   //setter for left child node
+    void setRightChild(const HuffmanNode &right); //setter for right child node
 
     char getCharacter(void) const;      //getter for character
     int getFrequency(void) const;       //getter for frequency

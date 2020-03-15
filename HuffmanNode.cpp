@@ -28,6 +28,7 @@ HuffmanNode::HuffmanNode(HuffmanNode &&rhs) : frequency(rhs.frequency), characte
     rhs.rightChild = nullptr;
     rhs.leftChild = nullptr;
     rhs.frequency = -1;
+    rhs.character = 0;
 }
 
 HuffmanNode &HuffmanNode::operator=(const HuffmanNode &rhs)
@@ -69,11 +70,11 @@ void HuffmanNode::setFrequency(int f)
     frequency = f;
 }
 
-void HuffmanNode::setLeftChild(HuffmanNode left)
+void HuffmanNode::setLeftChild(const HuffmanNode &left)
 {
     leftChild = std::shared_ptr<HuffmanNode>(new HuffmanNode(left));
 }
-void HuffmanNode::setRightChild(HuffmanNode right)
+void HuffmanNode::setRightChild(const HuffmanNode &right)
 {
     rightChild = std::shared_ptr<HuffmanNode>(new HuffmanNode(right));
 }
