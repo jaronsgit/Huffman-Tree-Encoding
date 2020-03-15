@@ -22,6 +22,35 @@ HuffmanTree::~HuffmanTree()
     root = nullptr;
 }
 
+//performs shallow copy construction using rhs HuffmanTree
+HuffmanTree::HuffmanTree(const HuffmanTree &rhs) : root(rhs.root)
+{
+}
+//move copy constructor
+HuffmanTree::HuffmanTree(HuffmanTree &&rhs) : root(std::move(rhs.root))
+{
+    rhs.root = nullptr;
+}
+//copy assignment operator
+HuffmanTree &HuffmanTree::operator=(const HuffmanTree &rhs)
+{
+    if (this != &rhs)
+    {
+        root = rhs.root;
+    }
+    return *this;
+}
+//move assignment operator
+HuffmanTree &HuffmanTree::operator=(HuffmanTree &&rhs)
+{
+    if (this != &rhs)
+    {
+        root = std::move(rhs.root);
+        rhs.root = nullptr;
+    }
+    return *this;
+}
+
 void HuffmanTree::buildFrequencyTable(std::string inputFileName)
 {
     std::ifstream ifs;
@@ -48,8 +77,6 @@ void HuffmanTree::buildFrequencyTable(std::string inputFileName)
 void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
 {
 
-    //std::priority_queue<HuffmanNode> testingQueue;
-
     for (std::pair<char, int> element : ft)
     {
         char keyChar = element.first;
@@ -61,15 +88,9 @@ void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
         tempNode.setCharacter(keyChar);
         tempNode.setFrequency(valueFreq);
         nodeQueue.push(tempNode);
-        //testingQueue.push(tempNode);
+
         //PRINT("tempNode char=" + std::string(1, tempPtr->getCharacter()) + "\n");
     }
-
-    /*while (testingQueue.size() > 0)
-    {
-        PRINT(std::string(1, testingQueue.top().getCharacter()) + " : " + std::to_string(testingQueue.top().getFrequency()) + "\n");
-        testingQueue.pop();
-    }*/
 }
 
 void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
@@ -78,10 +99,6 @@ void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
 
     while (nodeQueue.size() > 1)
     {
-
-        //HuffmanNode temp = nodeQueue.top();
-        //nodeQueue.pop();
-        //PRINT("character=" + std::string(1, temp.getCharacter()) + " frequency=" + std::to_string(temp.getFrequency()) + "\n")
 
         HuffmanNode newTempNode = HuffmanNode();
 
@@ -100,7 +117,6 @@ void HuffmanTree::buildHuffmanTree(std::unordered_map<char, int> ft)
         newTempNode.setFrequency(sumFrequency);
 
         nodeQueue.push(newTempNode);
-        //PRINT("newTempNode frequency=" + std::to_string(newTempNode.getFrequency()) + "\n");
     }
 
     root = std::make_shared<HuffmanNode>(nodeQueue.top());
@@ -115,7 +131,7 @@ void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
     if ((node->getLeftChild() == nullptr) && (node->getRightChild() == nullptr))
     { //Is at a leaf node
         codeTable[node->getCharacter()] = binaryCode;
-        //PRINT("code for " + std::string(1, node->getCharacter()) + "=" + binaryCode + "\n");
+
         return;
     }
     else
@@ -125,22 +141,6 @@ void HuffmanTree::buildCodeTable(HuffmanNode *node, std::string binaryCode)
         buildCodeTable(node->getLeftChild(), leftCode);
         buildCodeTable(node->getRightChild(), rightCode);
     }
-
-    /*if (node->getLeftChild())
-    { //has left child
-        buildCodeTable(node->getLeftChild(), binaryCode += "0");
-    }
-
-    if (node->getRightChild())
-    { //has right child
-        buildCodeTable(node->getRightChild(), binaryCode += "1");
-    }
-
-    if (!node->getLeftChild() && !node->getRightChild())
-    { //if it is a leaf node
-        codeTable[node->getCharacter()] = binaryCode;
-        PRINT("code for " + std::string(1, node->getCharacter()) + "=" + binaryCode + "\n");
-    }*/
 }
 
 void HuffmanTree::compressData(std::string inputFileName, std::string outputFileName)
@@ -244,8 +244,6 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
     buildCodeTable(root.get(), ""); //Build the code table from the tree
     std::string encodedString = encodeData(inputFileName);
 
-    //char *encoded_cstr = new char[encodedString.length()];
-    //std::strcpy(encoded_cstr, encodedString.c_str());
     int processedBitsCount = 0;
 
     std::ofstream binaryFile;
@@ -277,9 +275,6 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
             char tempChar = tempBitset.to_ulong();
             //PRINT("writing to binary file: " + tempBitset.to_string() + "\n");
             binaryFile.write((char *)&tempChar, 1);
-
-            //PRINT(tempBitset);
-            //PRINT("\n");
         }
         binaryFile.close();
     }
@@ -342,22 +337,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
         //insert the codes from the header file into the code table/map
         for (int i = 0; i < tokens.size(); i += 2)
         {
-            /*char cstr[tokens[i].size() + 1];
-            strcpy(cstr, tokens[i].c_str()); //copy it into char array as c_str() returns constant
 
-            PRINT(std::string(1, cstr[0]) + ":" + tokens[i + 1] + "\n");*/
-            //codeTable[tokens[i].c_str()[0]] = tokens[i + 1];
-
-            //PRINT(tokens[i + 1] + ":" + tokens[i] + "\n");
-            /*if (tokens[i] == "")
-            {
-                decode_code_table[tokens[i + 1]] = '\n';
-            }
-            else
-            {
-
-                decode_code_table[tokens[i + 1]] = tokens[i].c_str()[0];
-            }*/
             decode_code_table[tokens[i + 1]] = (char)std::stoi(tokens[i]);
         }
 
