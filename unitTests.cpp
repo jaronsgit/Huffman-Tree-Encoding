@@ -3,6 +3,7 @@
 #include "catch.hpp"
 #include "HuffmanTree.h"
 #include "HuffmanNode.h"
+#include <memory>
 
 using namespace CHNJAR003;
 
@@ -103,31 +104,82 @@ TEST_CASE("HuffmanNode Testing")
     SECTION("Move Assignment Operator")
     {
         std::cout << "Move Assignment Tests:\n";
+
+        HuffmanNode node1;
+        node1.setCharacter('a');
+        node1.setFrequency(23);
+        HuffmanNode temp;
+        node1.setRightChild(temp);
+        REQUIRE(node1.getCharacter() == 'a');
+        REQUIRE(node1.getFrequency() == 23);
+        REQUIRE(node1.getRightChild() != nullptr);
+
+        HuffmanNode node2;
+        node2 = std::move(node1);
+        REQUIRE(node1.getCharacter() == 0);
+        REQUIRE(node1.getFrequency() == -1);
+        REQUIRE(node1.getLeftChild() == nullptr);
+        REQUIRE(node1.getRightChild() == nullptr);
+        REQUIRE(node2.getCharacter() == 'a');
+        REQUIRE(node2.getFrequency() == 23);
+        REQUIRE(node2.getLeftChild() == nullptr);
+        REQUIRE(node2.getRightChild() != nullptr);
     }
 
     SECTION("setLeftChild()")
     {
         std::cout << "setLeftChild() Tests:\n";
+        HuffmanNode node1;
+
+        HuffmanNode temp;
+        node1.setLeftChild(temp);
+        REQUIRE(node1.getLeftChild() != nullptr);
     }
     SECTION("setRightChild")
     {
         std::cout << "setRightChild() Tests:\n";
+        HuffmanNode node1;
+
+        HuffmanNode temp;
+        node1.setRightChild(temp);
+        REQUIRE(node1.getRightChild() != nullptr);
     }
     SECTION("getCharacter()")
     {
         std::cout << "getCharacter() Tests:\n";
+        HuffmanNode node1;
+        node1.setCharacter('a');
+        REQUIRE(node1.getCharacter() == 'a');
     }
     SECTION("getFrequency()")
     {
         std::cout << "getFrequency() Tests:\n";
+        HuffmanNode node1;
+        node1.setFrequency(10);
+        REQUIRE(node1.getFrequency() == 10);
     }
     SECTION("getLeftChild()")
     {
         std::cout << "getLeftChild() Tests:\n";
+        HuffmanNode node1;
+        node1.setCharacter('a');
+        node1.setFrequency(23);
+        HuffmanNode temp;
+        temp.setCharacter('b');
+        node1.setLeftChild(temp);
+
+        REQUIRE(node1.getLeftChild()->getCharacter() == 'b');
     }
     SECTION("getRightChild()")
     {
         std::cout << "getRightChild() Tests:\n";
+        HuffmanNode node1;
+        node1.setCharacter('a');
+        node1.setFrequency(23);
+        HuffmanNode temp;
+        temp.setCharacter('b');
+        node1.setRightChild(temp);
+        REQUIRE(node1.getRightChild()->getCharacter() == 'b');
     }
 }
 
@@ -142,6 +194,19 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
     freq_map_t tempFreqMap;
     code_map_t tempCodeMap;
     node_queue_t tempNodeQueue;
+
+    SECTION("HuffmanTree Testing")
+    {
+        std::cout << "HuffmanTree Tests" << std::endl;
+        std::cout << "-----------------" << std::endl;
+
+        SECTION("Default Constructor")
+        {
+            //std::cout << "Default Constructor Tests:\n";
+            HuffmanTree tree;
+            REQUIRE(tree.getRootNode() == nullptr);
+        }
+    }
 
     SECTION("buildFrequencyTable() Tests")
     {
@@ -212,5 +277,55 @@ TEST_CASE("COMPRESSION ALGORITHM TESTING")
         REQUIRE(tempCodeMap['p'].length() == 4);
         REQUIRE(tempCodeMap['r'].length() == 4);
         REQUIRE(tempCodeMap['s'].length() == 4);
+    }
+
+    SECTION("encodeData() Tests")
+    {
+        hufftree.buildFrequencyTable("testingFiles/testinput");
+        tempFreqMap = hufftree.getFrequencyTable();
+        hufftree.buildHuffmanTree(tempFreqMap);
+        hufftree.buildCodeTable(hufftree.getRootNode(), ""); //Build the code table from the tree
+        tempCodeMap = hufftree.getCodeTable();
+
+        std::string encodedString = hufftree.encodeData("testingFiles/testinput");
+
+        int totBits = 0;
+        for (auto const &element : tempFreqMap)
+        {
+            totBits += tempCodeMap[element.first].length() * element.second;
+        }
+
+        //std::cout << encodedString << std::endl;
+        REQUIRE(encodedString.length() == totBits); //Ensure that the expected number of bits is present in the encoded string
+    }
+    SECTION("decodeData() Tests")
+    {
+    }
+    SECTION("compressData() Tests")
+    {
+        hufftree.compressData("testingFiles/lorem_ipsum", "testingFiles/lorem_output");
+        std::string encodedString = hufftree.encodeData("testingFiles/lorem_ipsum");
+        std::ifstream ifs("testingFiles/lorem_output.txt");
+        std::string readFromFileLine = "";
+        if (ifs.is_open())
+        {
+            getline(ifs, readFromFileLine);
+            //std::cout << "From the file: " << tempLine << std::endl;
+        }
+        else
+        {
+            std::cout << "Unable to open testing output text file." << std::endl;
+        }
+        REQUIRE(readFromFileLine.length() == encodedString.length());
+    }
+    SECTION("compressToBitStream() Tests")
+    {
+        hufftree.compressToBitStream("testingFiles/lorem_ipsum", "testingFiles/lorem_output_bitstream");
+    }
+    SECTION("decompressFromBitStream() Tests")
+    {
+    }
+    SECTION("")
+    {
     }
 }
