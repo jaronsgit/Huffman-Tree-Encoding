@@ -157,32 +157,6 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
         outputFile.close();
     }
 
-    /*
-    int numCharsInFile = 0;
-    int numBitsInFile = 0;
-
-    std::ofstream outputFile;
-    outputFile.open((outputFileName + ".txt").c_str());
-
-    std::ifstream inputFile;
-    inputFile.open((inputFileName + ".txt").c_str());
-
-    if (inputFile.is_open())
-    {
-        char tempChar;
-        while (inputFile.get(tempChar))
-        {
-            numCharsInFile++;                            //increment the number of characters read from the file
-            std::string bitString = codeTable[tempChar]; //convert the character to its corresponding string binary code
-            numBitsInFile += bitString.length();         //record the number of individual "bits"
-            outputFile << bitString;                     //write the bitstring to the output textfile
-
-            //PRINT(bitString + "\n");
-        }
-        inputFile.close();
-        outputFile.close();
-    }
-*/
     outputFile.open((outputFileName + ".hdr").c_str());
 
     if (outputFile.is_open())
@@ -193,7 +167,7 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
         {
             char keyChar = element.first;
             std::string valueBitString = element.second;
-            PRINT(std::string(1, keyChar) + ":" + valueBitString + "\n");
+            //PRINT(std::string(1, keyChar) + ":" + valueBitString + "\n");
             outputFile << keyChar << ":" << valueBitString << std::endl;
         }
 
@@ -250,8 +224,8 @@ std::string HuffmanTree::encodeData(std::string inputFileName)
         inputFile.close();
     }
 
-    int actualFileSize = (numBitsInFile / 8) + (numBitsInFile % 8 ? 1 : 0);
-    PRINT("Actual file size supposed to be: " + std::to_string(actualFileSize) + " bytes\n");
+    //int actualFileSize = (numBitsInFile / 8) + (numBitsInFile % 8 ? 1 : 0);
+    //PRINT("Actual file size supposed to be: " + std::to_string(actualFileSize) + " bytes\n");
 
     return encodedString;
 }
@@ -306,6 +280,30 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
     else
     {
         PRINT("Could not open the binary file to write compressed file.\n");
+    }
+
+    std::ofstream outputFile;
+    outputFile.open((outputFileName + ".hdr").c_str());
+
+    if (outputFile.is_open())
+    {
+        //PRINT("About to write out the code table.\n");
+
+        for (std::pair<char, std::string> element : codeTable)
+        {
+            char keyChar = element.first;
+            std::string valueBitString = element.second;
+            //PRINT(std::string(1, keyChar) + ":" + valueBitString + "\n");
+            outputFile << keyChar << ":" << valueBitString << std::endl;
+        }
+
+        outputFile.close();
+        //int actualFileSize = (numBitsInFile / 8) + (numBitsInFile % 8 ? 1 : 0);
+        //PRINT("Actual file size supposed to be: " + std::to_string(actualFileSize) + " bytes\n");
+    }
+    else
+    {
+        PRINT("Could not open file.");
     }
 
     //char test = std::stoi("101", nullptr, 2);

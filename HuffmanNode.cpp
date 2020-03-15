@@ -55,6 +55,7 @@ HuffmanNode &HuffmanNode::operator=(HuffmanNode &&rhs)
 
         rhs.leftChild = nullptr;
         rhs.rightChild = nullptr;
+        rhs.character = 0;
     }
 
     return *this; //return a reference to the current object
@@ -101,7 +102,7 @@ HuffmanNode *HuffmanNode::getRightChild() const
 bool operator<(const HuffmanNode &a, const HuffmanNode &b)
 {
 
-    return a.getFrequency() > b.getFrequency();
+    return a.frequency > b.frequency;
 }
 
 } // namespace CHNJAR003

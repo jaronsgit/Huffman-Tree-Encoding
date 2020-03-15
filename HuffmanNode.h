@@ -29,9 +29,9 @@ public:
     int getFrequency(void) const;       //getter for frequency
     HuffmanNode *getLeftChild() const;  //getter for left child node
     HuffmanNode *getRightChild() const; //getter for right child node
-};
 
-bool operator<(const HuffmanNode &a, const HuffmanNode &b);
+    friend bool operator<(const HuffmanNode &a, const HuffmanNode &b);
+};
 
 } // namespace CHNJAR003
 
