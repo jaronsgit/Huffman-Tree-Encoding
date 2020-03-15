@@ -335,7 +335,7 @@ TEST_CASE("HuffmanTree Testing")
     {
         hufftree.compressData("testingFiles/lorem_ipsum", "lorem_output");
         std::string encodedString = hufftree.encodeData("testingFiles/lorem_ipsum");
-        std::ifstream ifs("testingFiles/lorem_output.txt");
+        std::ifstream ifs("outputFiles/lorem_output.txt");
         std::string readFromFileLine = "";
         if (ifs.is_open())
         {
