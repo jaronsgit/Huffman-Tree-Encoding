@@ -37,6 +37,12 @@ void HuffmanTree::buildFrequencyTable(std::string inputFileName)
 
         ifs.close();
     }
+
+    /*std::cout << "FT:" << std::endl;
+    for (auto const &element : frequencyTable)
+    {
+        std::cout << (int)element.first << ":" << element.second << std::endl;
+    }*/
 }
 
 void HuffmanTree::fillPriorityQueue(std::unordered_map<char, int> ft)
@@ -168,7 +174,7 @@ void HuffmanTree::compressData(std::string inputFileName, std::string outputFile
             char keyChar = element.first;
             std::string valueBitString = element.second;
             //PRINT(std::string(1, keyChar) + ":" + valueBitString + "\n");
-            outputFile << keyChar << ":" << valueBitString << std::endl;
+            outputFile << (int)keyChar << ":" << valueBitString << std::endl;
         }
 
         outputFile.close();
@@ -269,7 +275,7 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
             }
 
             char tempChar = tempBitset.to_ulong();
-            PRINT("writing to binary file: " + tempBitset.to_string() + "\n");
+            //PRINT("writing to binary file: " + tempBitset.to_string() + "\n");
             binaryFile.write((char *)&tempChar, 1);
 
             //PRINT(tempBitset);
@@ -294,7 +300,7 @@ void HuffmanTree::compressToBitStream(std::string inputFileName, std::string out
             char keyChar = element.first;
             std::string valueBitString = element.second;
             //PRINT(std::string(1, keyChar) + ":" + valueBitString + "\n");
-            outputFile << keyChar << ":" << valueBitString << std::endl;
+            outputFile << (int)keyChar << ":" << valueBitString << std::endl;
         }
 
         outputFile.close();
@@ -343,7 +349,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             //codeTable[tokens[i].c_str()[0]] = tokens[i + 1];
 
             //PRINT(tokens[i + 1] + ":" + tokens[i] + "\n");
-            if (tokens[i] == "")
+            /*if (tokens[i] == "")
             {
                 decode_code_table[tokens[i + 1]] = '\n';
             }
@@ -351,7 +357,8 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             {
 
                 decode_code_table[tokens[i + 1]] = tokens[i].c_str()[0];
-            }
+            }*/
+            decode_code_table[tokens[i + 1]] = (char)std::stoi(tokens[i]);
         }
 
         /*for (const auto &element : decode_code_table)
@@ -389,7 +396,7 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
         for (int byteIndex = 0; byteIndex < totNumBytes; byteIndex++)
         {
             inputBinaryFile.read((char *)&tempBitsetByte, 1);
-            PRINT("reading from binary file: " + tempBitsetByte.to_string() + "\n");
+            //PRINT("reading from binary file: " + tempBitsetByte.to_string() + "\n");
             for (int i = 7; i > -1; i--)
             {
                 tempBit = (tempBitsetByte[i] == 1 ? '1' : '0');
@@ -401,10 +408,10 @@ void HuffmanTree::decompressFromBitStream(std::string binFileName, std::string c
             }
         }
 
-        PRINT("Encoded string: " + encodedString + "\n");
+        //PRINT("Encoded string: " + encodedString + "\n");
 
         std::string decodedString = decodeData(decode_code_table, encodedString);
-        PRINT("Decoded string: " + decodedString + "\n");
+        //PRINT("Decoded string: " + decodedString + "\n");
         inputBinaryFile.close();
 
         std::ofstream decompressedFile;
