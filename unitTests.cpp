@@ -373,7 +373,7 @@ TEST_CASE("HuffmanTree Testing")
     SECTION("compressToBitStream() and decompressFromBitStream() Tests")
     {
         hufftree.compressToBitStream("testingFiles/lorem_ipsum", "lorem_output_bitstream");
-        hufftree.decompressFromBitStream("outputFiles/lorem_output_bitstream", "outputFiles/lorem_output_bitstream");
+        hufftree.decompressFromBitStream("lorem_output_bitstream", "lorem_output_bitstream");
 
         std::ifstream ifs1("testingFiles/lorem_ipsum.txt");
         std::ifstream ifs2("outputFiles/lorem_output_bitstream_decompressed.txt");
