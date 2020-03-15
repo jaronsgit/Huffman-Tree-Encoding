@@ -306,9 +306,6 @@ TEST_CASE("HuffmanTree Testing")
 
         REQUIRE(tempCodeMap['g'].length() == 2);
         REQUIRE(tempCodeMap['o'].length() == 2);
-        REQUIRE(tempCodeMap['p'].length() == 4);
-        REQUIRE(tempCodeMap['r'].length() == 4);
-        REQUIRE(tempCodeMap['s'].length() == 4);
     }
 
     SECTION("encodeData() Tests")
